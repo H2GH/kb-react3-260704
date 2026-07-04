@@ -40,23 +40,61 @@ export interface Rating {
 }
 
 // 정적 메타 데이터 제공 방법
-export const metadata = {
-  title: '영화 상세 정보',
-  description: '영화 상세 정보의 설명',
-  openGraph: {
-    type: 'website',
-    siteName: 'Next.js 연습 프로젝트',
-    title: '영화 상세 정보',
-    description: '영화 상세 정보의 설명',
-    images: 'https://picsum.potos/700/500'
+// export const metadata = {
+//   title: '영화 상세 정보',
+//   description: '영화 상세 정보의 설명',
+//   openGraph: {
+//     type: 'website',
+//     siteName: 'Next.js 연습 프로젝트',
+//     title: '영화 상세 정보',
+//     description: '영화 상세 정보의 설명',
+//     images: 'https://picsum.potos/700/500'
+//   }
+// }
+
+async function fetchMovie(movieId: string) {
+  // const { data: movie } = await axios.get<Movie>(
+  //   `https://omdbapi.com?apikey=${process.env.OMDB_APIKEY}&i=${movieId}`
+  // )
+  const res = await fetch(
+    `https://omdbapi.com?apikey=${process.env.OMDB_APIKEY}&i=${movieId}`,
+    {
+      method: 'GET',
+      cache: 'force-cache' // 서버에 캐시, Next.js 전용 기능
+    }
+  )
+
+  const movie = await res.json()
+  return movie
+}
+
+export async function generateMetadata({ params }: Props) {
+  const { movieId } = await params
+  const movie = await fetchMovie(movieId)
+  // const { data: movie } = await axios.get<Movie>(
+  //   `https://omdbapi.com?apikey=${process.env.OMDB_APIKEY}&i=${movieId}`
+  // )
+
+  return {
+    title: movie.Title,
+    description: movie.Plot,
+    openGraph: {
+      type: 'website',
+      siteName: 'Next.js 연습 프로젝트',
+      title: movie.Title,
+      description: movie.Plot,
+      images: movie.Poster
+    }
   }
 }
 
 export default async function MovieDetails({ params }: Props) {
   const { movieId } = await params
-  const { data: movie } = await axios.get<Movie>(
-    `https://omdbapi.com?apikey=${process.env.OMDB_APIKEY}&i=${movieId}`
-  )
+  const movie = await fetchMovie(movieId)
+  // const { data: movie } = await axios.get<Movie>(
+  //   `https://omdbapi.com?apikey=${process.env.OMDB_APIKEY}&i=${movieId}`
+  // )
+
   return (
     <>
       <h1>{movie.Title}</h1>
