@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "react-next-scaffold": {
+      "source": "ParkYoungWoong/skills",
+      "sourceType": "github",
+      "skillPath": "skills/react-next-scaffold/SKILL.md",
+      "computedHash": "e1f174bec6b7fcdb5b997438e7e1e13f3119fb781bef1c2537297d60840ed00a"
+    }
+  }
+}
